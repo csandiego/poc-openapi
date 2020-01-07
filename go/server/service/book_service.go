@@ -1,15 +1,13 @@
 package service
 
-type Book struct {
-	Id     int
-	Title  string
-	Author string
-}
+import (
+	"github.com/csandiego/poc-openapitools/go/server/data"
+)
 
 type BookService interface {
-	Create(Book) error
+	Create(data.Book) error
 	Delete(int) error
-	Get(int) (Book, error)
-	List() ([]Book, error)
-	Update(int, Book) error
+	Get(int) (data.Book, error)
+	List() ([]data.Book, error)
+	Update(int, data.Book) error
 }

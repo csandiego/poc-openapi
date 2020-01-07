@@ -2,42 +2,40 @@ package service
 
 import (
 	"errors"
-	"log"
+	"github.com/csandiego/poc-openapitools/go/server/data"
 	"sync"
 )
 
 var ErrNotFound = errors.New("Not found")
 
-type MockBookService struct {
+type InMemoryBookService struct {
 	bookId int
-	books  map[int]Book
+	books  map[int]data.Book
 	mutex  sync.Mutex
 }
 
-func NewMockBookService() *MockBookService {
-	return &MockBookService{bookId: 0, books: map[int]Book{}}
+func NewInMemoryBookService() *InMemoryBookService {
+	return &InMemoryBookService{bookId: 0, books: map[int]data.Book{}}
 }
 
-func (service *MockBookService) Create(book Book) error {
+func (service *InMemoryBookService) Create(book data.Book) error {
 	service.mutex.Lock()
 	service.bookId += 1
 	book.Id = service.bookId
 	service.books[service.bookId] = book
-	log.Println(service.books)
 	service.mutex.Unlock()
 	return nil
 }
 
-func (service *MockBookService) Delete(id int) error {
+func (service *InMemoryBookService) Delete(id int) error {
 	service.mutex.Lock()
 	delete(service.books, id)
-	log.Println(service.books)
 	service.mutex.Unlock()
 	return nil
 }
 
-func (service *MockBookService) Get(id int) (Book, error) {
-	var book Book
+func (service *InMemoryBookService) Get(id int) (data.Book, error) {
+	var book data.Book
 	var exists bool
 	service.mutex.Lock()
 	book, exists = service.books[id]
@@ -48,8 +46,8 @@ func (service *MockBookService) Get(id int) (Book, error) {
 	return book, nil
 }
 
-func (service *MockBookService) List() ([]Book, error) {
-	books := []Book{}
+func (service *InMemoryBookService) List() ([]data.Book, error) {
+	books := []data.Book{}
 	service.mutex.Lock()
 	for _, v := range service.books {
 		books = append(books, v)
@@ -58,7 +56,7 @@ func (service *MockBookService) List() ([]Book, error) {
 	return books, nil
 }
 
-func (service *MockBookService) Update(id int, book Book) error {
+func (service *InMemoryBookService) Update(id int, book data.Book) error {
 	var err error = nil
 	service.mutex.Lock()
 	if _, exists := service.books[id]; exists {
@@ -67,7 +65,6 @@ func (service *MockBookService) Update(id int, book Book) error {
 	} else {
 		err = ErrNotFound
 	}
-	log.Println(service.books)
 	service.mutex.Unlock()
 	return err
 }

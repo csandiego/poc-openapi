@@ -20,7 +20,7 @@ import (
 func main() {
 	log.Printf("Server started")
 
-	bookService := service.NewMockBookService()
+	bookService := service.NewInMemoryBookService()
 	BookApiService := openapi.NewBookApiService(bookService)
 	BookApiController := openapi.NewBookApiController(BookApiService)
 
