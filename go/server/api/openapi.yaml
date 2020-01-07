@@ -1,0 +1,107 @@
+openapi: 3.0.1
+info:
+  title: Books API
+  version: 0.0.1
+servers:
+- url: /
+paths:
+  /books:
+    get:
+      operationId: list
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Book'
+                type: array
+          description: OK
+      tags:
+      - book
+    post:
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+        required: true
+      responses:
+        200:
+          content: {}
+          description: OK
+      tags:
+      - book
+      x-codegen-request-body-name: book
+  /books/{id}:
+    delete:
+      operationId: delete
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          content: {}
+          description: OK
+      tags:
+      - book
+    get:
+      operationId: get
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+          description: OK
+      tags:
+      - book
+    put:
+      operationId: update
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+        required: true
+      responses:
+        200:
+          content: {}
+          description: OK
+      tags:
+      - book
+      x-codegen-request-body-name: book
+components:
+  schemas:
+    Book:
+      example:
+        author: author
+        id: 0
+        title: title
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        author:
+          type: string
+      required:
+      - author
+      - title
+      type: object
