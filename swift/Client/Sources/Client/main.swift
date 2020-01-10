@@ -1,13 +1,16 @@
 import Foundation
 import OpenApiTools
+import Lib
 
 OpenApiToolsAPI.apiResponseQueue = .global(qos: .`default`)
+
+let service = OpenApiToolsBookService(api: BookAPI.self)
 
 switch CommandLine.arguments[1] {
 case "list":
     let group = DispatchGroup()
     group.enter()
-    BookAPI.list { books, error in
+    service.list { books, error in
         if let error = error {
             print(error)
         }
@@ -20,7 +23,7 @@ case "list":
 case "create":
     let group = DispatchGroup()
     group.enter()
-    BookAPI.create(book: Book(id: nil, title: CommandLine.arguments[2], author: CommandLine.arguments[3])) { _, error in
+    service.create(book: Book(id: nil, title: CommandLine.arguments[2], author: CommandLine.arguments[3])) { _, error in
         if let error = error {
             print(error)
         }
@@ -33,7 +36,7 @@ case "get":
     }
     let group = DispatchGroup()
     group.enter()
-    BookAPI.callGet(id: id) { book, error in
+    service.callGet(id: id) { book, error in
         if let error = error {
             print(error)
         } else {
@@ -48,7 +51,7 @@ case "update":
     }
     let group = DispatchGroup()
     group.enter()
-    BookAPI.update(id: id, book: Book(id: nil, title: CommandLine.arguments[3], author: CommandLine.arguments[4])) { _, error in
+    service.update(id: id, book: Book(id: nil, title: CommandLine.arguments[3], author: CommandLine.arguments[4])) { _, error in
         if let error = error {
             print(error)
         }
@@ -61,7 +64,7 @@ case "delete":
     }
     let group = DispatchGroup()
     group.enter()
-    BookAPI.delete(id: id) { _, error in
+    service.delete(id: id) { _, error in
         if let error = error {
             print(error)
         }
